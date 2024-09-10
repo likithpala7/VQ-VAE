@@ -1,2 +1,2 @@
 # VQ-VAE
-Creating a VQ-VAE to improve image generation quality of VAEs
+Creating a VQ-VAE to demonstrate the improvement of image generation quality over VAEs
