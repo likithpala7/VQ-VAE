@@ -1,8 +1,7 @@
-from datasets import load_dataset
+from datasets import load_dataset, load_from_disk
 import torch
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
-import torch.nn as nn
 from dataloader import VAEDataset
 from tqdm import tqdm
 from model import VQVAE
@@ -10,7 +9,6 @@ from torch.optim import Adam
 import matplotlib.pyplot as plt
 import argparse
 import torch.nn.functional as F
-from torch.profiler import profile, record_function, ProfilerActivity
 
 parser = argparse.ArgumentParser()
 
@@ -18,7 +16,7 @@ parser = argparse.ArgumentParser()
 Defining hyperparameters
 """
 
-parser.add_argument("--num_epochs", type=int, default=10)
+parser.add_argument("--num_epochs", type=int, default=50)
 parser.add_argument("--batch_size", type=int, default=256)
 parser.add_argument("--learning_rate", type=float, default=1e-3)
 parser.add_argument("--num_hiddens", type=int, default=128)
@@ -26,7 +24,7 @@ parser.add_argument("--num_residual_hiddens", type=int, default=32)
 parser.add_argument("--num_residual_layers", type=int, default=2)
 parser.add_argument("--embedding_dim", type=int, default=64)
 parser.add_argument("--num_embeddings", type=int, default=512)
-parser.add_argument("--commitment_cost", type=float, default=0.25)
+parser.add_argument("--commitment_cost", type=float, default=0.5)
 
 args = parser.parse_args()
 
@@ -34,7 +32,8 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # Loading the dataset
 print("Loading dataset...")
-ds = load_dataset("D:/downloads/img_align_celeba/img_align_celeba")
+# ds = load_from_disk("D:/downloads/img_align_celeba/img_align_celeba")
+ds = load_from_disk("D:/downloads/img_align_celeba/img_align_celeba")
 print("Dataset loaded.")
 
 """
@@ -49,7 +48,7 @@ dataset = VAEDataset(ds, transform)
 dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=True, pin_memory=True)
 
 """
-Define model, optimizer, and loss function
+Define model, optimizer, and training loop
 """
 
 model = VQVAE(3, args.num_hiddens, args.num_residual_layers, args.num_residual_hiddens, args.num_embeddings, args.embedding_dim, args.commitment_cost).to(device)

@@ -21,7 +21,7 @@ args = parser.parse_args()
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # Set the path to the saved model
-saved_model_path = "./saved_models/vqvae_10.pth"
+saved_model_path = "./saved_models/vqvae_50.pth"
 
 # Set the path to the dataset
 dataset_path = "D:/downloads/img_align_celeba/img_align_celeba"
