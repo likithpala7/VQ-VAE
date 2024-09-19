@@ -7,12 +7,8 @@ This project demonstrates how to use a PixelCNN model to autoregressively model 
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-  - [Training the PixelCNN](#training-the-pixelcnn)
-  - [Generating Samples](#generating-samples)
-- [Model Architecture](#model-architecture)
 - [Results](#results)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Overview
 This repository contains an implementation of a PixelCNN model that is trained to model the distribution of latent codes from a VQ-VAE. The goal is to generate new samples by modeling the latent space distribution and using the VQ-VAE decoder to reconstruct images.
@@ -26,60 +22,48 @@ This repository contains an implementation of a PixelCNN model that is trained t
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/latent-pixelcnn-vqvae.git
-   cd latent-pixelcnn-vqvae
+   git clone https://github.com/likithpala7/VQ-VAE.git
+   cd VQ-VAE
+   ```
 2. Install the required dependencies:
     ```bash
     pip install -r requirements.txt
+    ```
 
-Usage
-Training the PixelCNN
-Prepare Latent Codes: Train a VQ-VAE on your dataset and encode the images into discrete latent codes. These latent codes should be stored in a format suitable for training (e.g., latent codes of shape [batch_size, 32, 32] for a 32x32 latent space).
+## Usage
+1. To train the VQ-VAE, run this commmand:
+    ```bash
+    python train_script.py
+    ```
+    You can adjust the parameters in the file depending on the dataset you are using.
+2. To train the PixelCNN, run this command:
+    ```bash
+    python train_pixelcnn.py
+    ```
+    Similarly, you can adjust any of the parameters in this file to change the parameters of the PixelCNN model.
+3. To reconstruct 10 random images and save them, run this command:
+    ```bash
+    python reconstruction_script.py
+    ```
+4. To generate images using codebook indices that were sampled randomly, run this command:
+    ```bash
+    python random_sample.py
+    ```
+    Note that the images are supposed to look abstract as this is a complete random sample.
+5. To generate images using the trained PixelCNN model, run this command:
+    ```bash
+    python generation_script.py
+    ```
+    This will generate images, using the distribution that the PixelCNN model learned.
 
-Train the PixelCNN Model: You can train the PixelCNN to autoregressively model the latent codes by running the training loop in pixelcnn_model.py:
-
-python
-Copy code
-import torch
-from pixelcnn_model import PixelCNN
-
-# Define hyperparameters
-latent_dim = 512       # Number of unique latent codes
-image_size = 32        # Spatial size of the latent space (e.g., 32x32)
-num_blocks = 10        # Number of residual blocks in the PixelCNN
-
-# Initialize the model
-model = PixelCNN(latent_dim=latent_dim, image_size=image_size, num_blocks=num_blocks)
-
-# Train the model
-model.train()  # Implement your training loop (see training section below)
-Training Loop: Implement a standard training loop using cross-entropy loss to predict the next latent code for each pixel based on previous ones. The PixelCNN operates over the entire latent grid (32x32) to predict the latent code for each position in the grid.
-
-Generating Samples
-Once the PixelCNN is trained, you can autoregressively sample from it to generate new latent sequences. These can then be passed through the VQ-VAE decoder to produce new images.
-
-python
-Copy code
-# Example of sampling from PixelCNN and decoding using VQ-VAE
-latent_grid = model.generate(start_sequence, image_size=32)
-generated_image = vqvae_decoder.decode(latent_grid)
-Model Architecture
-The PixelCNN model consists of:
-
-Embedding Layer: Encodes each latent code into an embedding vector.
-Gated Residual Blocks: A series of gated convolutional layers that autoregressively model the spatial dependencies between latent codes.
-Logits Output: Outputs logits representing the probability distribution over possible latent codes for each pixel in the grid.
-Model Hyperparameters
-Latent Dimension: Number of unique latent codes (e.g., 512).
-Image Size: Size of the latent grid (e.g., 32x32).
-Number of Blocks: Number of residual blocks in the PixelCNN.
-Kernel Size: Size of the convolutional kernels used in each residual block (e.g., 3x3).
-Results
+# Results
 Once trained, the PixelCNN can autoregressively generate new latent grids that represent coherent data distributions in the latent space of the VQ-VAE. The VQ-VAE decoder can then transform these grids back into image space.
 
 Here are some example images generated from the model:
 
 ### Reconstructed Images
+
+The VQ-VAE performs a lot better in comparison to the VAE that I trained on the same dataset. This is due to the fact that the VQ-VAE maps the data distribution to discrete values in the latent space, whereas a VAE maps it to continuous values. This makes it harder to generate samples for a VQ-VAE since you have to train another model (a PixelCNN in this case) to learn the distribution of the latent codes.
 
 ![Reconstructed Image 1](output/reconstructed_image_1.png)
 ![Reconstructed Image 2](output/reconstructed_image_4.png)
@@ -87,20 +71,20 @@ Here are some example images generated from the model:
 
 ### Randomly Generated Images
 
+Generating images by selecting random latent codes and passing them through the VQ-VAE decoder doesn't result in meaningful images, but it helps to understand that most of the codes don't mean anything by themselves. There is a distribution of the codes that changes depending on the codes around it. This is precisely what we are modeling when we train a PixelCNN. Samples images from the latent space of a VAE would result in meaningful images since the latent space is meaningful.
+
 ![Randomly Generated Image 1](output/random_sample_0.png)
 ![Randomly Generated Image 2](output/random_sample_1.png)
 ![Randomly Generated Image 3](output/random_sample_2.png)
 
-### Images Generated by PixeLCNN
+### Images Generated by PixelCNN
+
+I used a PixelCNN to model the distribution of the latent codes found by the VQ-VAE. I tried different training strategies including using attention in the PixelCNN and using a transformer to model the sequence of latent codes in the images. These were not successful attempts and resulted in the decoder generating images that were all pink. As evident in these examples, the PixelCNN was somewhat successful in modeling the latent codes, although there is a lot of work that could be done to improve the model.
+
 ![Randomly Generated Image 1](output/sample_1.png)
 ![Randomly Generated Image 2](output/sample_5.png)
 ![Randomly Generated Image 3](output/sample_8.png)
 
 
-Contributing
-We welcome contributions! Feel free to open issues or submit pull requests to help improve this project. Here's how you can contribute:
-
-Report bugs or suggest features by opening an issue.
-Submit code improvements or new features by opening a pull request.
-License
-This project is licensed under the MIT License. See the LICENSE file for details.
+# Contributing
+We welcome contributions! Feel free to open issues or submit pull requests to help improve this project.
