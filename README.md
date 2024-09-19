@@ -1,6 +1,6 @@
 # Latent Space Modeling with PixelCNN for VQ-VAE
 
-This project demonstrates how to use a PixelCNN model to autoregressively model the latent space of a VQ-VAE. The objective is to generate high-quality samples by learning the distribution of latent codes produced by the VQ-VAE using PixelCNN.
+This project demonstrates how to create and train a VQ-VAE, then to use a PixelCNN model to autoregressively model the latent space of the VQ-VAE. The objective is to generate high-quality samples by learning the distribution of latent codes produced by the VQ-VAE using PixelCNN.
 
 ## Table of Contents
 - [Overview](#overview)
@@ -11,9 +11,10 @@ This project demonstrates how to use a PixelCNN model to autoregressively model 
 - [Contributing](#contributing)
 
 ## Overview
-This repository contains an implementation of a PixelCNN model that is trained to model the distribution of latent codes from a VQ-VAE. The goal is to generate new samples by modeling the latent space distribution and using the VQ-VAE decoder to reconstruct images.
+This repository contains an implementation of a VQ-VAE that is trained to reconstruct images of faces, as well as an implementatino of a PixelCNN model that is trained to model the distribution of latent codes from the VQ-VAE. The goal is to generate new samples by modeling the latent space distribution and using the VQ-VAE decoder to reconstruct images.
 
 ## Features
+- **Facial Reconstruction**: Use VQ-VAE to reconstruct the original images, with high-quality.
 - **VQ-VAE Latent Code Generation**: Use VQ-VAE to encode images into discrete latent codes.
 - **PixelCNN-Based Modeling**: A PixelCNN model for autoregressively modeling the latent space.
 - **Autoregressive Sampling**: Generate new latent codes, which can then be decoded by the VQ-VAE to create new images.
