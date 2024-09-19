@@ -1,0 +1,14 @@
+datasets==2.19.1
+matplotlib==3.8.4
+numpy==1.24.3
+Pillow==10.4.0
+scikit_learn==1.5.2
+torch==2.3.0
+torch==2.5.0.dev20240824+cu121
+torchvision==0.15.2a0
+torchvision==0.18.1a0
+torchvision==0.20.0.dev20240825+cu121
+tqdm==4.66.1
+tqdm==4.66.4
+tqdm==4.66.5
+umap_learn==0.5.6

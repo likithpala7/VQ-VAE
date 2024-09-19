@@ -29,15 +29,9 @@ This repository contains an implementation of a PixelCNN model that is trained t
    git clone https://github.com/your-username/latent-pixelcnn-vqvae.git
    cd latent-pixelcnn-vqvae
 2. Install the required dependencies:
+    ```bash
+    pip install -r requirements.txt
 
-bash
-Copy code
-pip install -r requirements.txt
-Required libraries:
-
-torch
-numpy
-matplotlib (optional, for visualizing results)
 Usage
 Training the PixelCNN
 Prepare Latent Codes: Train a VQ-VAE on your dataset and encode the images into discrete latent codes. These latent codes should be stored in a format suitable for training (e.g., latent codes of shape [batch_size, 32, 32] for a 32x32 latent space).
